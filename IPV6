@@ -1,0 +1,36 @@
+package securin;
+public class ValidateIPv6Address {
+    public static void main(String[] args) {
+        String ip1 = "2001:0db8:85a3:0000:0000:8a2e:0370:7334"; // valid
+        String ip2 = "2001:db8::8a2e:370:7334";                // invalid here (double colon not handled)
+        String ip3 = "2001:db8:85a3:0:0:8a2e:370:7334";        // valid
+        String ip4 = "1200::AB00:1234::2552:7777:1313";        // invalid
+
+        System.out.println(ip1 + " -> " + isValidIPv6(ip1));
+        System.out.println(ip2 + " -> " + isValidIPv6(ip2));
+        System.out.println(ip3 + " -> " + isValidIPv6(ip3));
+        System.out.println(ip4 + " -> " + isValidIPv6(ip4));
+    }
+
+    public static boolean isValidIPv6(String ip) {
+        String[] parts = ip.split(":");
+
+        // must have exactly 8 groups
+        if (parts.length != 8) return false;
+
+        for (String part: parts) {
+            if (part.length() == 0 || part.length() > 4) return false;
+
+            for (char c: part.toCharArray()) {
+                if (!isHexChar(c)) return false;
+            }
+        }
+        return true;
+    }
+
+     static boolean isHexChar(char c) {
+        return (c >= '0' && c <= '9') ||
+               (c >= 'a' && c <= 'f') ||
+               (c >= 'A' && c <= 'F');
+    }
+}
